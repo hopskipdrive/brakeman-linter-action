@@ -21,12 +21,10 @@ class GithubCheckRunService
 
     pp '$' * 20
     pp '%' * 20
-    pp "#{@conclusion} #{@summary}"
 
     result = {}
 
     if @conclusion == 'success'
-      pp 'SUCCESS ' * 20
       result.merge(client_patch(id))
     else
       @annotations = @report_adapter.annotations(@report)
