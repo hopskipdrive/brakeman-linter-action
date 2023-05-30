@@ -6,7 +6,7 @@ class ReportAdapter
     CONCLUSION_TYPES = { failure: 'failure', success: 'success' }.freeze
     ANNOTATION_LEVEL = { notice: 'notice', warning: 'warning', failure: 'failure' }.freeze
 
-    def conslusion(report)
+    def conclusion(report)
       return CONCLUSION_TYPES[:failure] if security_warnings(report).positive?
 
       CONCLUSION_TYPES[:success]
