@@ -13,7 +13,8 @@ class ReportAdapter
     end
 
     def summary(report)
-      "**Brakeman Report**:\n#{security_warnings(report)} security warnings\n#{check_table(report)}"
+      "testing 123"
+      # "**Brakeman Report**:\n#{security_warnings(report)} security warnings\n#{check_table(report)}"
     end
 
     def annotations(report)
