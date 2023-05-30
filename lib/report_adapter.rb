@@ -17,26 +17,26 @@ class ReportAdapter
     end
 
     def annotations(report)
-      # report['warnings'].map do |error|
-      #   {
-      #     'path' => error['file'],
-      #     'start_line' => error['line'],
-      #     'end_line' => error['line'],
-      #     'annotation_level' => ANNOTATION_LEVEL[:warning],
-      #     'title' => "#{error['confidence']} - #{error['check_name']}",
-      #     'message' => error['message']
-      #   }
-      # end
+      report['warnings'].map do |error|
+        {
+          'path' => error['file'],
+          'start_line' => error['line'],
+          'end_line' => error['line'],
+          'annotation_level' => ANNOTATION_LEVEL[:warning],
+          'title' => "#{error['confidence']} - #{error['check_name']}",
+          'message' => error['message']
+        }
+      end
     end
 
     private
 
     def check_table(report)
-      # uniq_checks(report).reduce('') { |memo, check| memo + "- [#{check[:check_name]}](#{check[:link]})\n" }
+      uniq_checks(report).reduce('') { |memo, check| memo + "- [#{check[:check_name]}](#{check[:link]})\n" }
     end
 
     def uniq_checks(report)
-      # report['warnings'].map { |w| { check_name: w['check_name'], link: w['link'] } }.uniq { |w| w[:check_name] }
+      report['warnings'].map { |w| { check_name: w['check_name'], link: w['link'] } }.uniq { |w| w[:check_name] }
     end
 
     def security_warnings(report)

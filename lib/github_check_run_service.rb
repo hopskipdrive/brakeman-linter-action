@@ -24,10 +24,15 @@ class GithubCheckRunService
     pp '%' * 20
 
     result = {}
-    @annotations.each_slice(MAX_ANNOTATIONS_SIZE) do |annotations|
-      result.merge(client_patch(id, annotations))
+
+    if @conclusion == 'success'
+      return update_check_payload(nil)
+    else
+      @annotations.each_slice(MAX_ANNOTATIONS_SIZE) do |annotations|
+        result.merge(client_patch(id, annotations))
+      end
+      result
     end
-    result
   end
 
   private
