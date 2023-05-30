@@ -17,15 +17,16 @@ class GithubCheckRunService
       create_check_payload
     )['id']
     @summary = @report_adapter.summary(@report)
-    @annotations = @report_adapter.annotations(@report)
     @conclusion = @report_adapter.conclusion(@report)
 
     pp '$' * 20
     pp '%' * 20
+    pp "#{@conclusion} #{@summary}"
 
     result = {}
 
     if @conclusion == 'success'
+      pp 'SUCCESS ' * 20
       result = {
         name: CHECK_NAME,
         head_sha: @github_data[:sha],
@@ -38,6 +39,7 @@ class GithubCheckRunService
         }
       }
     else
+      @annotations = @report_adapter.annotations(@report)
       @annotations.each_slice(MAX_ANNOTATIONS_SIZE) do |annotations|
         result.merge(client_patch(id, annotations))
       end
