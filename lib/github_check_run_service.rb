@@ -27,17 +27,7 @@ class GithubCheckRunService
 
     if @conclusion == 'success'
       pp 'SUCCESS ' * 20
-      result = {
-        name: CHECK_NAME,
-        head_sha: @github_data[:sha],
-        status: 'completed',
-        completed_at: Time.now.iso8601,
-        conclusion: @conclusion,
-        output: {
-          title: CHECK_NAME,
-          summary: @summary
-        }
-      }
+      result.merge(client_patch(id))
     else
       @annotations = @report_adapter.annotations(@report)
       @annotations.each_slice(MAX_ANNOTATIONS_SIZE) do |annotations|
@@ -50,7 +40,7 @@ class GithubCheckRunService
 
   private
 
-  def client_patch(id, annotations)
+  def client_patch(id, annotations=nil)
     @client.patch(
       "#{endpoint_url}/#{id}",
       update_check_payload(annotations)
@@ -70,18 +60,32 @@ class GithubCheckRunService
     }
   end
 
-  def update_check_payload(annotations)
-    {
-      name: CHECK_NAME,
-      head_sha: @github_data[:sha],
-      status: 'completed',
-      completed_at: Time.now.iso8601,
-      conclusion: @conclusion,
-      output: {
-        title: CHECK_NAME,
-        summary: @summary,
-        annotations: annotations
+  def update_check_payload(annotations=nil)
+    if annotations
+      {
+        name: CHECK_NAME,
+        head_sha: @github_data[:sha],
+        status: 'completed',
+        completed_at: Time.now.iso8601,
+        conclusion: @conclusion,
+        output: {
+          title: CHECK_NAME,
+          summary: @summary,
+          annotations: annotations
+        }
       }
-    }
+    else
+      {
+        name: CHECK_NAME,
+        head_sha: @github_data[:sha],
+        status: 'completed',
+        completed_at: Time.now.iso8601,
+        conclusion: @conclusion,
+        output: {
+          title: CHECK_NAME,
+          summary: @summary
+        }
+      }
+    end
   end
 end
