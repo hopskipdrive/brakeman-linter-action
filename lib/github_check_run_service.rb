@@ -26,13 +26,24 @@ class GithubCheckRunService
     result = {}
 
     if @conclusion == 'success'
-      return update_check_payload(nil)
+      result = {
+        name: CHECK_NAME,
+        head_sha: @github_data[:sha],
+        status: 'completed',
+        completed_at: Time.now.iso8601,
+        conclusion: @conclusion,
+        output: {
+          title: CHECK_NAME,
+          summary: @summary
+        }
+      }
     else
       @annotations.each_slice(MAX_ANNOTATIONS_SIZE) do |annotations|
         result.merge(client_patch(id, annotations))
       end
-      result
     end
+
+    result
   end
 
   private
